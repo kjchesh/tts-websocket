@@ -1,0 +1,148 @@
+# LLM → TTS WebSocket Demo (Engineered Arts Take‑Home)
+
+This repository implements a small WebSocket service that:
+
+1. Receives text from a client over WebSocket.
+2. Sends the text to an OpenAI Chat model.
+3. Sends the Chat response text to an OpenAI Text‑to‑Speech (TTS) model.
+4. Returns the synthesized audio bytes to the client over the same WebSocket connection.
+
+## Project Structure
+
+```text
+app/
+  __init__.py
+  config.py           # Settings and OpenAI configuration
+  models.py           # Pydantic models for WS messages
+  openai_client.py    # Async HTTP client for Chat + TTS
+  service.py          # Text → LLM → TTS orchestration
+  websocket_server.py # FastAPI + WebSocket endpoint
+
+client/
+  simple_client.py    # Tiny Python WebSocket client
+
+tests/
+  test_service.py     # Example unit test for orchestration
+
+requirements.txt
+README.md
+```
+
+## Prerequisites
+
+- Python 3.11+ (recommended)
+- An OpenAI API key with access to **Chat Completions** and **TTS** endpoints.
+
+## Installation
+
+Clone or unpack the repository, then in the project root:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Set the environment variable for your OpenAI API key:
+
+```bash
+export OPENAI_API_KEY="sk-..."   # macOS / Linux
+# or on Windows (PowerShell):
+# $env:OPENAI_API_KEY="sk-..."
+```
+
+You can optionally override the default models / voice / format:
+
+```bash
+export OPENAI_CHAT_MODEL="gpt-4o-mini"
+export OPENAI_TTS_MODEL="gpt-4o-mini-tts"
+export OPENAI_TTS_VOICE="alloy"
+export OPENAI_TTS_FORMAT="mp3"
+```
+
+## Running the Server
+
+From the project root (with the virtual environment activated):
+
+```bash
+uvicorn app.websocket_server:app --reload
+```
+
+This starts the FastAPI app on `http://127.0.0.1:8000` by default.
+
+- Health check: `GET /health`
+- WebSocket endpoint: `ws://127.0.0.1:8000/ws/chat`
+
+## Testing the WebSocket (Python Client)
+
+With the server running, in another terminal:
+
+```bash
+source .venv/bin/activate  # if not already active
+python client/simple_client.py "Hello robot"
+```
+
+The client will:
+
+1. Connect to `ws://localhost:8000/ws/chat`.
+2. Send a JSON message: `{"text": "Hello robot"}`.
+3. Print the metadata frame received from the server.
+4. Write the audio frame to `out.mp3` in the project root.
+
+You can then play `out.mp3` with any standard media player.
+
+## Example WebSocket Message Flow
+
+**Client → Server** (text frame):
+
+```json
+{"text": "Tell me a fun fact about robots."}
+```
+
+**Server → Client**:
+
+1. JSON text frame (metadata):
+
+   ```json
+   {
+     "text": "Here is a short response from the LLM ...",
+     "model": "chat+tts"
+   }
+   ```
+
+2. Binary frame with audio bytes (e.g. MP3).
+
+## Concurrency Model
+
+- Each WebSocket connection is handled by FastAPI in an `async` endpoint.
+- Calls to OpenAI are made using `httpx.AsyncClient`, so they are non‑blocking.
+- Multiple clients can maintain concurrent WebSocket connections and generate audio in parallel.
+
+## Error Handling
+
+- Invalid JSON or missing `text` field → server responds with an `OutboundError` JSON frame.
+- Upstream OpenAI errors or unexpected exceptions → server responds with a generic `OutboundError` frame and logs details on the server side.
+
+This keeps the client protocol simple while still giving basic diagnostics.
+
+## Tests
+
+To run the example tests:
+
+```bash
+pytest
+```
+
+`tests/test_service.py` demonstrates how the orchestration layer can be tested in isolation by mocking the OpenAI client.
+
+## Notes and Possible Extensions
+
+This implementation intentionally avoids production‑grade concerns such as:
+
+- Authentication / rate limiting
+- Streaming partial responses
+- Cancellation / interruption handling
+- Persistent logging or metrics
+
+However, the structure (`config` → `client` → `service` → `transport`) is chosen so that these concerns can be added later without major refactoring.

@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tts-websocket"
+version = "0.1.0"
+description = "LLM → TTS WebSocket demo for Engineered Arts take-home assignment."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Katrina Cheshire" }
+]
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "httpx>=0.27.0",
+  "pydantic>=2.9.0",
+  "websockets>=13.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black>=24.0.0",
+  "isort>=5.13.0",
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.24.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+skip-string-normalization = false
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["app"]
+default_section = "THIRDPARTY"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra"
+testpaths = [
+  "tests",
+]
+
+[tool.uvicorn]
+factory = false
+reload = true
+host = "127.0.0.1"
+port = 8000
+app = "app.websocket_server:app"

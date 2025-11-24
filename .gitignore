@@ -1,0 +1,45 @@
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.egg-info/
+*.egg
+build/
+dist/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# === FastAPI / Uvicorn ===
+# (nothing special needed here)
+
+# === VS Code ===
+.vscode/
+*.code-workspace
+
+# === Environment & secrets ===
+.env
+.env.*
+
+# === Local files ===
+.DS_Store
+Thumbs.db
+
+# === Testing ===
+.pytest_cache/
+.coverage
+.cache/
+htmlcov/
+
+# === output mp3 files ===
+*.mp3
