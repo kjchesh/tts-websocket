@@ -20,23 +20,7 @@ class OpenAIClient:
     async def aclose(self) -> None:
         await self._client.aclose()
 
-    async def generate_chat_completion(self, user_text: str) -> str:
-        """Call OpenAI Chat Completions API and return assistant text."""
-
-        payload = {
-            "model": settings.chat_model,
-            "messages": [
-                {"role": "system", "content": "You are a concise, friendly assistant."},
-                {"role": "user", "content": user_text},
-            ],
-        }
-
-        resp = await self._client.post("/chat/completions", json=payload)
-        resp.raise_for_status()
-        data = resp.json()
-        return data["choices"][0]["message"]["content"]
-
-    async def generate_chat_response(self, user_text: str) -> str:
+    async def generate_chat_response(self, user_text: str) -> str | ValueError:
         """Call Chat Responses API and return assistant text."""
 
         payload = {
@@ -47,7 +31,13 @@ class OpenAIClient:
         resp = await self._client.post("/responses", json=payload)
         resp.raise_for_status()
         data = resp.json()
-        return data["output"][0]["content"][0].get("text")
+
+        content = (data.get("output") or [{}])[0].get("content", [{}])[0]
+
+        if content.get("text") is None:
+            raise ValueError("No 'text' field found in chat response")
+
+        return content.get("text")
 
     async def synthesize_speech(self, text: str) -> bytes:
         """Call OpenAI TTS API and return raw audio bytes."""
@@ -61,6 +51,14 @@ class OpenAIClient:
 
         resp = await self._client.post("/audio/speech", json=payload)
         resp.raise_for_status()
+
+        content_type = resp.headers.get("content-type", "")
+        if not content_type.startswith("audio/"):
+            raise ValueError(f"Unexpected content type: {content_type}")
+
+        if not resp.content:
+            raise ValueError("Received empty audio content from TTS API.")
+
         return resp.content
 
 

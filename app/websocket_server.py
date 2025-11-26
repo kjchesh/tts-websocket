@@ -21,7 +21,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         # Happens during reload in debugger – safe to ignore
         pass
     finally:
-        print("Shutting down...")
+        logger.info("Shutting down...")
         await openai_client.aclose()
 
 

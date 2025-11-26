@@ -1,3 +1,5 @@
+"""Tests for app/service.py."""
+
 import pytest
 
 from app import service
