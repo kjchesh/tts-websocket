@@ -79,7 +79,7 @@ This starts the FastAPI app on `http://127.0.0.1:8000` by default.
 With the server running, in another terminal:
 
 ```bash
-source .venv/bin/activate  # if not already active
+source .venv/bin/activate
 python client/simple_client.py "Hello robot"
 ```
 

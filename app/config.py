@@ -9,7 +9,6 @@ class Settings(BaseSettings):
       - Optional overrides for model names / voice / format.
     """
 
-    # TODO: this must be set in the environment for the app to work
     openai_api_key: str
 
     # Defaults can be overridden via environment variables:
@@ -21,8 +20,6 @@ class Settings(BaseSettings):
     tts_format: str = "mp3"  # e.g. mp3, wav
 
     class Config:
-        # env_prefix = "OPENAI_"
-        case_sensitive = False
         env_file = ".env"
 
 
@@ -33,5 +30,5 @@ def get_settings() -> Settings:
     """Return singleton Settings instance, failing fast if misconfigured."""
     global _settings
     if _settings is None:
-        _settings = Settings()
+        _settings = Settings()  # pyright: ignore
     return _settings
