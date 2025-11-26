@@ -6,4 +6,8 @@ websockets==15.0.1
 pytest==9.0.1
 pytest-asyncio==1.3.0
 pydantic-settings ==2.12.0
+
+# Development tools: Optional
 black==25.11.0
+isort==7.0.0
+ruff==0.14.6

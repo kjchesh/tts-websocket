@@ -1,14 +1,14 @@
+import asyncio
 import logging
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 
 from .models import InboundMessage, OutboundError, OutboundMetadata
-from .service import generate_tts_for_prompt
 from .openai_client import openai_client
-from contextlib import asynccontextmanager
-from collections.abc import AsyncIterator
-import asyncio
+from .service import generate_tts_for_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ async def websocket_chat(ws: WebSocket) -> None:
             # 2) Orchestrate LLM + TTS
             try:
                 llm_text, audio_bytes = await generate_tts_for_prompt(inbound.text)
-            except Exception as exc:  # don't leak internals to client
+            except Exception:  # don't leak internals to client
                 logger.exception("Error while generating TTS")
                 err = OutboundError(error="Internal error while generating audio.")
                 await ws.send_text(err.model_dump_json())

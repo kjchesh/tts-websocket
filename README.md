@@ -79,7 +79,7 @@ This starts the FastAPI app on `http://127.0.0.1:8000` by default.
 With the server running, in another terminal:
 
 ```bash
-source .venv/bin/activate  # if not already active
+source .venv/bin/activate
 python client/simple_client.py "Hello robot"
 ```
 
@@ -91,3 +91,19 @@ The client will:
 4. Write the audio frame to `out.mp3` in the project root.
 
 You can then play `out.mp3` with any standard media player.
+
+## Running tests from terminal
+
+    python -m pytest
+
+## Optional Developer Tooling
+
+This project includes optional pre-commit hooks for Black, Ruff, and isort.
+These are not required to run or review the project.
+
+To enable them locally:
+
+    pip install pre-commit
+    pre-commit install
+
+This will run formatting and linting automatically on each commit.
