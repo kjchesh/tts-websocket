@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -9,6 +9,8 @@ class Settings(BaseSettings):
       - Optional overrides for model names / voice / format.
     """
 
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
     openai_api_key: str
 
     # Defaults can be overridden via environment variables:
@@ -18,9 +20,6 @@ class Settings(BaseSettings):
     tts_model: str = "gpt-4o-mini-tts"
     tts_voice: str = "alloy"
     tts_format: str = "mp3"  # e.g. mp3, wav
-
-    class Config:
-        env_file = ".env"
 
 
 _settings: Settings | None = None
