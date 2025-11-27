@@ -20,7 +20,7 @@ class OpenAIClient:
     async def aclose(self) -> None:
         await self._client.aclose()
 
-    async def generate_chat_response(self, user_text: str) -> str | None:
+    async def generate_chat_response(self, user_text: str) -> str:
         """Call Chat Responses API and return assistant text."""
 
         payload = {
@@ -33,13 +33,11 @@ class OpenAIClient:
         data = resp.json()
 
         content = (data.get("output") or [{}])[0].get("content", [{}])[0]
-
-        if content.get("text") is None:
+        if "text" not in content:
             raise ValueError("No 'text' field found in chat response")
-
         return content.get("text")
 
-    async def synthesize_speech(self, text: str) -> bytes | None:
+    async def synthesize_speech(self, text: str) -> bytes:
         """Call OpenAI TTS API and return raw audio bytes."""
 
         payload = {
