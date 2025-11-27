@@ -31,7 +31,7 @@ README.md
 ## Prerequisites
 
 - Python 3.11+ (recommended)
-- An OpenAI API key with access to **Chat Completions** and **TTS** endpoints.
+- An OpenAI API key with access to **Chat Responses** and **TTS** endpoints.
 
 ## Installation
 
