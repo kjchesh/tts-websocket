@@ -20,7 +20,7 @@ class OpenAIClient:
     async def aclose(self) -> None:
         await self._client.aclose()
 
-    async def generate_chat_response(self, user_text: str) -> str | ValueError:
+    async def generate_chat_response(self, user_text: str) -> str | None:
         """Call Chat Responses API and return assistant text."""
 
         payload = {
@@ -39,7 +39,7 @@ class OpenAIClient:
 
         return content.get("text")
 
-    async def synthesize_speech(self, text: str) -> bytes:
+    async def synthesize_speech(self, text: str) -> bytes | None:
         """Call OpenAI TTS API and return raw audio bytes."""
 
         payload = {
