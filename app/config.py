@@ -9,7 +9,9 @@ class Settings(BaseSettings):
       - Optional overrides for model names / voice / format.
     """
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
     openai_api_key: str
 
@@ -29,5 +31,5 @@ def get_settings() -> Settings:
     """Return singleton Settings instance, failing fast if misconfigured."""
     global _settings
     if _settings is None:
-        _settings = Settings()  # pyright: ignore
+        _settings = Settings()  # type: ignore[call-arg] # pyright: ignore
     return _settings

@@ -1,0 +1,33 @@
+.PHONY: venv install dev test typecheck format check clean
+
+# Create a virtual environment in .venv
+venv:
+	python -m venv .venv
+
+# Install dependencies from requirements.txt
+install:
+	pip install -r requirements.txt
+
+# Start the FastAPI app with uvicorn (change if your entrypoint is different)
+dev:
+	uvicorn app.websocket_server:app --reload
+
+# Run the test suite
+test:
+	python -m pytest
+
+# Type-check Python code (app + tests + client)
+typecheck:
+	mypy app tests client
+
+# Auto-format (if you have black & ruff installed)
+format:
+	black .
+	ruff check . --fix
+
+# Run everything important before committing
+check: test typecheck format
+
+# Remove Python cache directories and test/mypy caches
+clean:
+	python -c "import shutil, pathlib; [shutil.rmtree(p) for patt in ('__pycache__','.pytest_cache','.mypy_cache') for p in pathlib.Path('.').rglob(patt) if p.is_dir()]"
