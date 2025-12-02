@@ -17,11 +17,11 @@ class Settings(BaseSettings):
 
     # Defaults can be overridden via environment variables:
     openai_base_url: str = "https://api.openai.com/v1"
-    # TODO: which model is best for chat responses?
-    chat_model: str = "gpt-4.1"  # "gpt-4o-mini"
+
+    chat_model: str = "gpt-4.1"
     tts_model: str = "gpt-4o-mini-tts"
     tts_voice: str = "alloy"
-    tts_format: str = "mp3"  # e.g. mp3, wav
+    tts_format: str = "mp3"
 
 
 _settings: Settings | None = None
