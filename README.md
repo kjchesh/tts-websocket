@@ -21,10 +21,11 @@ app/
 client/
   simple_client.py    # Tiny Python WebSocket client
 
-tests/
-  test_service.py     # Example unit test for orchestration
+tests/                # Unit tests
 
+MakeFile
 requirements.txt
+pyproject.toml
 README.md
 ```
 
@@ -33,16 +34,16 @@ README.md
 - Python 3.11+ (recommended)
 - An OpenAI API key with access to **Chat Responses** and **TTS** endpoints.
 
-## Installation
-
-Clone or unpack the repository, then in the project root:
+## 🚀 Installation
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+# macOS/Linux:
+source .venv/bin/activate
+# Windows PowerShell:
+.venv\Scripts\activate
+# install dependencies using pyproject.toml
+pip install -e ".[dev]"
 
 Set the environment variable for your OpenAI API key:
 
@@ -55,7 +56,7 @@ export OPENAI_API_KEY="sk-..."   # macOS / Linux
 You can optionally override the default models / voice / format:
 
 ```bash
-export OPENAI_CHAT_MODEL="gpt-4o-mini"
+export OPENAI_CHAT_MODEL="gpt-4.1"
 export OPENAI_TTS_MODEL="gpt-4o-mini-tts"
 export OPENAI_TTS_VOICE="alloy"
 export OPENAI_TTS_FORMAT="mp3"
@@ -68,6 +69,11 @@ From the project root (with the virtual environment activated):
 ```bash
 uvicorn app.websocket_server:app --reload
 ```
+
+Or running via MakeFile
+
+    make dev
+
 
 This starts the FastAPI app on `http://127.0.0.1:8000` by default.
 
@@ -96,6 +102,10 @@ You can then play `out.mp3` with any standard media player.
 
     python -m pytest
 
+Or running via MakeFile
+
+    make test
+
 ## Optional Developer Tooling
 
 This project includes optional pre-commit hooks for Black, Ruff, and isort.
@@ -107,3 +117,7 @@ To enable them locally:
     pre-commit install
 
 This will run formatting and linting automatically on each commit.
+
+Optional: See MakeFile for other useful commands.
+
+

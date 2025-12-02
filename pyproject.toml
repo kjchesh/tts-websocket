@@ -11,21 +11,30 @@ requires-python = ">=3.11"
 authors = [
   { name = "Katrina Cheshire" }
 ]
+
+# Runtime dependencies (what the app needs to run)
 dependencies = [
-  "fastapi>=0.115.0",
+  "fastapi>=0.121.3",
   "uvicorn[standard]>=0.30.0",
-  "httpx>=0.27.0",
-  "pydantic>=2.9.0",
-  "websockets>=13.1",
+  "httpx>=0.28.1",
+  "pydantic>=2.12.4",
+  "pydantic-settings>=2.12.0",
+  "websockets>=15.0.1",
 ]
 
 [project.optional-dependencies]
+# Development tools – install with: pip install .[dev]
 dev = [
-  "black>=24.0.0",
-  "isort>=5.13.0",
-  "pytest>=8.0.0",
-  "pytest-asyncio>=0.24.0",
+  "pytest>=9.0.1",
+  "pytest-asyncio>=1.3.0",
+  "black>=25.11.0",
+  "isort>=7.0.0",
+  "ruff>=0.14.6",
+  "mypy>=1.19.0",
 ]
+
+[tool.setuptools]
+packages = ["app"]
 
 [tool.black]
 line-length = 88
