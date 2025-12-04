@@ -98,7 +98,7 @@ The client will:
 
 You can then play `out.mp3` with any standard media player.
 
-## Running tests from terminal
+## Running tests from terminal (Requires dev install)
 
     python -m pytest
 
@@ -106,7 +106,7 @@ Or running via MakeFile
 
     make test
 
-## Optional Developer Tooling
+## Optional Developer Tooling (Requires dev install)
 
 This project includes optional pre-commit hooks for Black, Ruff, and isort.
 These are not required to run or review the project.
