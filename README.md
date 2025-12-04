@@ -43,7 +43,7 @@ source .venv/bin/activate
 # Windows PowerShell:
 .venv\Scripts\activate
 # install dependencies using pyproject.toml
-pip install -e ".[dev]"
+pip install .
 
 Set the environment variable for your OpenAI API key:
 
